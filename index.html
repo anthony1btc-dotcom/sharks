@@ -456,15 +456,22 @@ function renderAccBar(){
   var w=G("ACBW");if(!w)return;
   var h='<div class="acb">';
   for(var i=0;i<accounts.length;i++){
-    var a=accounts[i],on=a.id===curAccId;
+    var a=accounts[i];
+    var on=a.id===curAccId;
+    var cls=on?'apill on':'apill';
+    var dcls=on?'adelbtn on':'adelbtn';
     h+='<div style="display:flex;align-items:center;flex-shrink:0">';
-    h+='<button class="apill'+(on?' on':'')+'" data-id="'+a.id+'" onclick="switchAccount(this.getAttribute('data-id'))">'+a.name+'</button>';
-    h+='<button class="adelbtn'+(on?' on':'')+'" data-id="'+a.id+'" data-nm="'+a.name.replace(/"/g,'').replace(/'/g,'')+'" onclick="confirmDelAccount(this.getAttribute('data-id'),this.getAttribute('data-nm'))">x</button>';
+    h+='<button class="'+cls+'" data-id="'+a.id+'" onclick="doSwitch(this)">'+a.name+'</button>';
+    h+='<button class="'+dcls+'" data-id="'+a.id+'" data-nm="'+a.name.replace(/['"]/g,'')+'" onclick="doDel(this)">x</button>';
     h+='</div>';
   }
   h+='<button class="aadd" onclick="openAddAccount()">+ Cuenta</button></div>';
   w.innerHTML=h;
 }
+
+window.doSwitch=function(btn){switchAccount(btn.getAttribute('data-id'));};
+window.doDel=function(btn){confirmDelAccount(btn.getAttribute('data-id'),btn.getAttribute('data-nm'));};
+
 
 window.confirmDelAccount=function(id,name){
   if(accounts.length<=1){toast('No puedes borrar la unica cuenta','var(--red)');return;}
