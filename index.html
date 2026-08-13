@@ -12,7 +12,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
 
 <style>
-:root{--bg:#050300;--bg2:#0a0700;--card:#0d0a01;--gold:#c9a84c;--gold2:#f0c040;--gd:rgba(201,168,76,.08);--gb:rgba(201,168,76,.2);--green:#00e676;--grd:rgba(0,230,118,.08);--red:#ff3d5a;--rdd:rgba(255,61,90,.08);--t1:#f5e8c0;--t2:#9a7e35;--t3:#4a3810;--b2:#1e1500;--st:env(safe-area-inset-top,0px);--sb:env(safe-area-inset-bottom,0px);}
+:root{--bg:#080600;--bg2:#0a0700;--card:#111005;--gold:#c9a84c;--gold2:#f0c040;--gd:rgba(201,168,76,.08);--gb:rgba(201,168,76,.2);--green:#00e676;--grd:rgba(0,230,118,.08);--red:#ff3d5a;--rdd:rgba(255,61,90,.08);--t1:#f0e0a0;--t2:#c8a84c;--t3:#7a6030;--b2:#2a1e00;--st:env(safe-area-inset-top,0px);--sb:env(safe-area-inset-bottom,0px);}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 html,body{height:100%;overflow:hidden;background:var(--bg);}
 body{color:var(--t1);font-family:Inter,sans-serif;font-size:14px;-webkit-font-smoothing:antialiased;}
@@ -599,6 +599,13 @@ function buildCal(){
   html+='</div>';
   html+='<div class="banner"><div class="bl2">'+(acc?acc.name:"Cuenta")+' · '+(view==="year"?"ANO "+yr:view==="month"?MOSF[mo].slice(0,3).toUpperCase()+" "+yr:"30 DIAS")+'</div>';
   html+='<div class="bp" style="color:'+(yp>=0?"var(--green)":"var(--red)")+'">'+fS(yp)+'</div>';
+  if(acc&&acc.initialCapital){
+    var bal=acc.initialCapital+yp;
+    html+='<div style="display:flex;justify-content:space-between;margin-top:8px;padding-top:8px;border-top:1px solid rgba(201,168,76,.1)">';
+    html+='<span style="color:var(--t3);font-size:9px;font-family:Cinzel,serif;letter-spacing:2px">BALANCE</span>';
+    html+='<span style="font-family:Cinzel,serif;font-size:18px;font-weight:700;color:'+(bal>=acc.initialCapital?"var(--green)":"var(--red)")+'" >'+fS(bal)+'</span>';
+    html+="</div>";
+  }
   if(yg){
     html+='<div style="display:flex;justify-content:space-between;font-size:10px;margin-top:8px;margin-bottom:3px;"><span style="color:var(--t3);font-size:8px;font-family:Cinzel,serif;letter-spacing:2px;">META '+yr+'</span><span style="color:var(--gold2);">'+fS(yp)+' / '+fS(yg)+' · '+gp.toFixed(0)+'%</span></div>';
     html+='<div class="gt"><div class="gf" style="width:'+gp+'%"></div></div>';
@@ -745,7 +752,11 @@ function buildRsk(){
     html+='<div class="db" style="background:'+(dPnl<0?"var(--rdd)":"var(--grd)")+';border-color:'+(dPnl<0?"rgba(255,61,90,.3)":"rgba(0,230,118,.25)")+'"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px"><span style="color:var(--t3);font-size:8px;letter-spacing:3px;font-family:Cinzel,serif">P&L DE HOY</span><span style="font-family:Cinzel,serif;font-size:18px;font-weight:900;color:'+(dPnl>=0?"var(--green)":"var(--red)")+'">'+fS(dPnl)+'</span></div><div style="color:var(--t3);font-size:9px;margin-bottom:4px;font-family:Cinzel,serif">LIMITE DIARIO 2%: '+fS(-dLim)+'</div><div style="height:5px;background:var(--b2);border-radius:3px;overflow:hidden"><div style="height:100%;background:'+dColor+';width:'+dPct+'%;border-radius:3px"></div></div>'+(dPct>=100?'<div style="color:var(--red);font-size:10px;font-family:Cinzel,serif;margin-top:5px;text-align:center;font-weight:700">LIMITE DIARIO ALCANZADO</div>':"")+'</div>';
   }
   html+='<div class="rc"><div class="rr"><span class="rl">CAPITAL TOTAL</span><span class="rv">'+fS(cap)+'</span></div><div class="rr"><span class="rl">RIESGO / TRADE</span><span class="rv">'+rp+'%</span></div><div style="height:1px;background:var(--gb);margin:8px 0;opacity:.4"></div><div class="rr"><span class="rl">MAX PERDIDA / TRADE</span><span style="font-family:Cinzel,serif;font-size:18px;font-weight:900;color:var(--red)">'+fS(maxR)+'</span></div><div class="rr"><span class="rl">DRAWDOWN ACTUAL</span><span style="font-family:Cinzel,serif;font-size:13px;color:var(--red)">'+fS(ys.dd)+'</span></div><div class="rr"><span class="rl">EXPECTANCY</span><span style="font-family:Cinzel,serif;font-size:13px;color:'+(ys.exp>=0?"var(--green)":"var(--red)")+'">'+fS(ys.exp)+'</span></div><div class="rr"><span class="rl">PROFIT FACTOR</span><span style="font-family:Cinzel,serif;font-size:13px;color:'+(ys.pf>=1.5?"var(--green)":ys.pf>=1?"var(--gold)":"var(--red)")+'">'+ys.pf.toFixed(2)+'</span></div></div>';
-  html+='<div class="sc"><div class="sl2">CONFIGURAR CAPITAL</div><div class="fg2"><label class="fl">CAPITAL $</label><input class="fi" id="RCAP" type="number" placeholder="10000" value="'+cap+'"/></div><div class="fg2"><label class="fl">% RIESGO / TRADE</label><input class="fi" id="RPCT" type="number" step="0.1" placeholder="1" value="'+rp+'"/></div><button class="bm" onclick="saveRisk()">GUARDAR CONFIGURACION</button></div>';
+  html+='<div class="sc"><div class="sl2">CONFIGURAR CAPITAL</div>'+
+  '<div class="fg2"><label class="fl">CON CUANTO EMPECE $</label><input class="fi" id="ICAP" type="number" placeholder="Ej: 500" value="'+(acc&&acc.initialCapital||'')+'"/><div style="color:var(--t3);font-size:10px;margin-top:4px;font-family:Cinzel,serif;line-height:1.6">El balance se calcula: Capital inicial + todos tus profits</div></div>'+
+  '<div class="fg2"><label class="fl">CAPITAL ACTUAL $</label><input class="fi" id="RCAP" type="number" placeholder="10000" value="'+cap+'"/></div>'+
+  '<div class="fg2"><label class="fl">% RIESGO / TRADE</label><input class="fi" id="RPCT" type="number" step="0.1" placeholder="1" value="'+rp+'"/></div>'+
+  '<button class="bm" onclick="saveRisk()">GUARDAR</button></div>';
   html+='<div class="sc"><div class="sl2">MIS REGLAS <button onclick="openRulesEditor()" style="background:var(--gd);border:1px solid var(--gb);border-radius:6px;color:var(--gold2);cursor:pointer;font-size:9px;padding:3px 8px;margin-left:auto;font-family:Cinzel,serif">EDITAR</button></div>';
   rules.forEach(function(r){html+='<div style="color:var(--t2);font-size:11px;padding:6px 0;border-bottom:1px solid var(--b2);line-height:1.5">'+r+'</div>';});
   html+='</div>';
@@ -853,7 +864,9 @@ window.openTradeForm=function(day,existing){
     form+='<div class="fg2"><label class="fl">NOTAS</label><textarea class="fi" id="FNOTES" placeholder="Setup, gestion, lecciones...">'+(( existing&&existing.notas)||"")+'</textarea></div>';
     form+='<div class="fg2"><label class="fl">FOTOS</label><div class="pr" id="PROW">';
     formPhotos.forEach(function(ph,i){form+='<div style="position:relative;flex-shrink:0"><img loading="lazy" src="'+ph+'" class="pt" onclick="openLB(\''+ph+'\')"/><button type="button" onclick="rmP('+i+')" style="position:absolute;top:-6px;right:-6px;background:var(--red);border:none;border-radius:50%;color:#fff;cursor:pointer;width:18px;height:18px;font-size:10px;display:flex;align-items:center;justify-content:center;line-height:1">✕</button></div>';});
-    form+='<label class="pa"><span style="font-size:18px">📷</span><span style="font-size:8px;font-family:Cinzel,serif;letter-spacing:1px">FOTO</span><input type="file" accept="image/*" multiple style="display:none" onchange="addP(this)"/></label></div></div>';
+    form+='<label class="pa"><span style="font-size:18px">📷</span><span style="font-size:8px;font-family:Cinzel,serif;letter-spacing:1px">FOTO</span><input type="file" accept="image/*" multiple style="display:none" onchange="addP(this)"/></label>'+
+      '<button type="button" onclick="pasteFromClipboard()" style="width:62px;height:62px;border-radius:12px;border:2px dashed rgba(201,168,76,.3);background:transparent;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:var(--gold);flex-shrink:0;font-size:8px;font-family:Cinzel,serif;letter-spacing:1px"><span style="font-size:20px">📋</span>PEGAR</button>'+
+      '</div></div>';
     form+='<button type="button" class="bm" id="BSV" onclick="doSave()">'+(editFid?"ACTUALIZAR":"GUARDAR TRADE")+'</button></div></div>';
     showM(form);
   }
@@ -861,7 +874,47 @@ window.openTradeForm=function(day,existing){
   window.pickE=function(v,btn){selEmo=v;const fi=G("FEMO");if(fi)fi.value=v;document.querySelectorAll(".eb").forEach(function(b){b.classList.remove("on");});btn.classList.add("on");};
   window.toggleMst=function(m,btn){const i=selMistakes.indexOf(m);if(i>=0){selMistakes.splice(i,1);btn.classList.remove("on");}else{selMistakes.push(m);btn.classList.add("on");}};
   window.rmP=function(i){formPhotos.splice(i,1);rf();};
-  window.addP=async function(input){
+  window.pastePhoto=async function(e){
+  if(!e||!e.clipboardData)return;
+  const items=Array.from(e.clipboardData.items||[]);
+  for(let i=0;i<items.length;i++){
+    if(items[i].type.indexOf('image')>=0){
+      const file=items[i].getAsFile();
+      if(file){toast("Pegando foto...");const c=await compressImg(file,350);addPhotoToRow(c);toast("Foto pegada!");}
+    }
+  }
+};
+window.pasteFromClipboard=async function(){
+  try{
+    const items=await navigator.clipboard.read();
+    for(const item of items){
+      for(const type of item.types){
+        if(type.startsWith('image/')){
+          const blob=await item.getType(type);
+          const file=new File([blob],'paste.png',{type});
+          toast("Pegando...");
+          const c=await compressImg(file,350);
+          addPhotoToRow(c);
+          toast("Foto pegada!");
+          return;
+        }
+      }
+    }
+    toast("No hay imagen copiada","var(--gold)");
+  }catch(e){toast("Ctrl+V en el area de fotos","var(--gold)");}
+};
+function addPhotoToRow(c){
+  formPhotos.push(c);
+  const row=G("PROW");
+  if(row){
+    const idx=formPhotos.length-1;
+    const w=document.createElement("div");
+    w.style="position:relative;flex-shrink:0";
+    w.innerHTML='<img loading="lazy" src="'+c+'" class="pt" onclick="openLB(this.src)"/><button type="button" onclick="rmP('+idx+')" style="position:absolute;top:-6px;right:-6px;background:var(--red);border:none;border-radius:50%;color:#fff;cursor:pointer;width:18px;height:18px;font-size:10px;display:flex;align-items:center;justify-content:center;line-height:1">x</button>';
+    row.insertBefore(w,row.lastElementChild);
+  }
+}
+window.addP=async function(input){
     const files=Array.from(input.files);
     for(let i=0;i<files.length;i++){
       try{
@@ -901,32 +954,52 @@ window.openTradeForm=function(day,existing){
 window.openGoalM=function(){
   var acc=curAcc();
   var cur=((acc&&acc.goal)||{})[yr]||'';
-  var mn=cur?('$'+Math.round(Number(cur)/12*100)/100+'/mes'):'';
+  var curW=((acc&&acc.goalWeekly)||{})||0;
+  var curM=Math.round(Number(cur)/12*100)/100;
   var presets=[500,1200,2400,5000,10000,100000];
-  var labels=['$500','$1,200','$2,400','$5,000','$10,000','$100,000'];
+  var labels=['$500','$1,200','$2,400','$5,000','$10,000','$100K'];
   var pbHtml='';
   for(var i=0;i<presets.length;i++){
     pbHtml+='<button onclick="setGoalP('+presets[i]+')" style="background:var(--gd);border:1px solid var(--gb);border-radius:10px;color:var(--gold2);cursor:pointer;font-family:Cinzel,serif;font-size:11px;padding:10px 4px;transition:all .2s">'+labels[i]+'</button>';
   }
   showM('<div class="ov" onclick="if(event.target===this)closeModal()"><div class="sh"><div class="shh"></div>'+
-    '<div class="shd"><div class="sht">META DE LA CUENTA</div><button class="shc" onclick="closeModal()">X</button></div>'+
-    '<div style="color:var(--t2);font-size:12px;margin-bottom:4px;font-family:Cinzel,serif">'+(acc?acc.name:'')+'</div>'+
-    '<div style="color:var(--t3);font-size:11px;margin-bottom:14px;line-height:1.8">Define cuanto quieres ganar este ano. Se divide en metas mensuales.</div>'+
-    '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:14px">'+pbHtml+'</div>'+
-    '<label class="fl">META PERSONALIZADA</label>'+
-    '<input class="fi" id="GM" type="number" placeholder="Ej: 3000" value="'+cur+'" style="font-family:Cinzel,serif;font-size:24px;color:var(--gold2);text-align:center;margin-bottom:6px;font-weight:900"/>'+
-    '<div id="GMPV" style="color:var(--t3);font-size:11px;text-align:center;margin-bottom:14px;font-family:Cinzel,serif">'+mn+'</div>'+
-    '<button class="bm" onclick="saveGoalMod()" style="margin-bottom:8px">GUARDAR META</button>'+
-    (cur?'<button class="bg" style="width:100%;font-size:11px" onclick="clearGoal()">Quitar meta de esta cuenta</button>':'')+
+    '<div class="shd"><div class="sht">METAS Y GOALS</div><button class="shc" onclick="closeModal()">X</button></div>'+
+    '<div style="color:var(--t2);font-size:12px;margin-bottom:16px;font-family:Cinzel,serif">'+(acc?acc.name:'')+'</div>'+
+
+    '<div style="background:rgba(201,168,76,.06);border:1px solid rgba(201,168,76,.15);border-radius:14px;padding:14px;margin-bottom:12px">'+
+    '<div style="font-family:Cinzel,serif;font-size:9px;letter-spacing:3px;color:var(--gold);margin-bottom:10px">META ANUAL '+yr+'</div>'+
+    '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:10px">'+pbHtml+'</div>'+
+    '<label class="fl">CANTIDAD PERSONALIZADA</label>'+
+    '<input class="fi" id="GM" type="number" placeholder="Ej: 5000" value="'+cur+'" style="font-family:Cinzel,serif;font-size:22px;color:var(--gold2);text-align:center;margin-bottom:6px;font-weight:900"/>'+
+    '<div id="GMPV" style="color:var(--t3);font-size:11px;text-align:center;font-family:Cinzel,serif;margin-bottom:4px">'+(cur?'= $'+curM+'/mes y $'+(Math.round(curM/4.3*100)/100)+'/semana':'')+'</div>'+
+    '</div>'+
+
+    '<div style="background:rgba(0,230,118,.04);border:1px solid rgba(0,230,118,.12);border-radius:14px;padding:14px;margin-bottom:12px">'+
+    '<div style="font-family:Cinzel,serif;font-size:9px;letter-spacing:3px;color:var(--green);margin-bottom:8px">META SEMANAL (opcional)</div>'+
+    '<input class="fi" id="GW" type="number" placeholder="Ej: 100" value="'+(acc&&acc.goalWeekly||'')+'"/>'+
+    '<div style="color:var(--t3);font-size:10px;margin-top:4px;font-family:Cinzel,serif">Cuanto quieres ganar cada semana</div>'+
+    '</div>'+
+
+    '<button class="bm" onclick="saveGoalMod()" style="margin-bottom:8px">GUARDAR METAS</button>'+
+    (cur?'<button class="bg" style="width:100%;font-size:11px" onclick="clearGoal()">Quitar meta anual</button>':'')+
   '</div></div>');
   var inp=G('GM');
   if(inp)inp.oninput=function(){
     var v=Number(this.value),p=G('GMPV');
-    if(p)p.textContent=v>0?'Meta mensual: $'+Math.round(v/12*100)/100:'';
+    if(p)p.textContent=v>0?'= $'+Math.round(v/12*100)/100+'/mes y $'+Math.round(v/52*100)/100+'/semana':'';
   };
 };
-window.setGoalP=function(v){var i=G('GM');if(i){i.value=v;var p=G('GMPV');if(p)p.textContent='Meta mensual: $'+Math.round(v/12*100)/100;}};
-window.saveGoalMod=async function(){var v=G('GM')&&G('GM').value;if(v&&Number(v)>0){await saveGoal(yr,Number(v));closeM();}else toast('Ingresa una meta mayor a 0','var(--gold)');};
+window.setGoalP=function(v){var i=G('GM');if(i){i.value=v;var p=G('GMPV');if(p)p.textContent='= $'+Math.round(v/12*100)/100+'/mes y $'+Math.round(v/52*100)/100+'/semana';}};
+window.saveGoalMod=async function(){
+  var v=G('GM')&&G('GM').value;
+  var w=G('GW')&&G('GW').value;
+  var acc=curAcc();if(!acc)return;
+  var data={};
+  if(v&&Number(v)>0){await saveGoal(yr,Number(v));}
+  if(w&&Number(w)>0){data.goalWeekly=Number(w);await updateAccount(acc.id,data);}
+  closeM();toast('Metas guardadas');
+};
+window.clearGoal=async function(){if(!confirm('Quitar la meta?'))return;var acc=curAcc();if(!acc)return;var g=Object.assign({},(acc.goal||{}));delete g[yr];await updateAccount(acc.id,{goal:g});toast('Meta removida');closeM();render();};
 window.clearGoal=async function(){if(!confirm('Quitar la meta?'))return;var acc=curAcc();if(!acc)return;var g=Object.assign({},(acc.goal||{}));delete g[yr];await updateAccount(acc.id,{goal:g});toast('Meta removida');closeM();render();};
 
 // PLAYBOOKS
